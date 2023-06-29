@@ -3,22 +3,18 @@ package com.challenge.marvel.rest.service;
 import com.challenge.marvel.library.dto.CharacterDto;
 import com.challenge.marvel.library.service.CharacterConsumerService;
 import com.challenge.marvel.rest.util.RegisterLogUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MarvelRestServiceImpl implements MarvelRestService {
     private final CharacterConsumerService characterConsumerService;
     private final SecurityService securityService;
     private final RegisterLogService registerLogService;
-
-    public MarvelRestServiceImpl(CharacterConsumerService characterConsumerService, SecurityService securityService, RegisterLogService registerLogService) {
-        this.characterConsumerService = characterConsumerService;
-        this.securityService = securityService;
-        this.registerLogService = registerLogService;
-    }
 
     @Override
     public List<CharacterDto> getCharacters() {

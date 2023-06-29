@@ -1,6 +1,7 @@
 package com.challenge.marvel.rest.controller;
 
 import com.challenge.marvel.rest.service.RegisterLogService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,14 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/log")
+@RequiredArgsConstructor
 public class RegisterLogController {
 
     private final RegisterLogService registerLogService;
-
-    public RegisterLogController(RegisterLogService registerLogService) {
-        this.registerLogService = registerLogService;
-    }
-
 
     @GetMapping("/registers")
     public ResponseEntity<?> getRegisters() {

@@ -6,6 +6,7 @@ import com.challenge.marvel.library.service.CharacterConsumerService;
 import com.challenge.marvel.rest.model.RegisterLog;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
+@Slf4j
 public class MarvelRestServiceTest {
 
     @Mock
@@ -38,13 +40,11 @@ public class MarvelRestServiceTest {
     @InjectMocks
     private MarvelRestServiceImpl marvelRestService;
 
-
     private CharacterRequestDto request;
 
     private RegisterLog register;
 
     private CharacterDto character;
-
 
     public static final String RESPONSE =
             "{\"id\":1011334,\"name\":\"3-D Man\"," +
@@ -68,13 +68,11 @@ public class MarvelRestServiceTest {
                 .invocationDateTime(LocalDateTime.of(2023,6, 29, 12, 30, 30))
                 .build();
 
-
         try {
             character = new ObjectMapper().readValue(RESPONSE, CharacterDto.class);
         } catch (JsonProcessingException e) {
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
-
     }
 
     @Test
@@ -111,5 +109,4 @@ public class MarvelRestServiceTest {
         assertThat(characterList).isNotNull();
         assertThat(characterList.isPresent()).isTrue();
     }
-
 }
