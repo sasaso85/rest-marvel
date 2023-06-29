@@ -3,6 +3,7 @@ package com.challenge.marvel.rest.service;
 import com.challenge.marvel.library.dto.CharacterDto;
 import com.challenge.marvel.library.dto.CharacterRequestDto;
 import com.challenge.marvel.library.service.CharacterConsumerService;
+import com.challenge.marvel.rest.model.RegisterLog;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,11 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,11 +32,16 @@ public class MarvelRestServiceTest {
     @Mock
     private SecurityService securityService;
 
+    @Mock
+    private RegisterLogService registerLogService;
+
     @InjectMocks
     private MarvelRestServiceImpl marvelRestService;
 
 
     private CharacterRequestDto request;
+
+    private RegisterLog register;
 
     private CharacterDto character;
 
@@ -54,6 +62,13 @@ public class MarvelRestServiceTest {
                 .limit("1")
                 .offset("0")
                 .build();
+
+        register = RegisterLog.builder()
+                .status(200)
+                .invocationDateTime(LocalDateTime.of(2023,6, 29, 12, 30, 30))
+                .build();
+
+
         try {
             character = new ObjectMapper().readValue(RESPONSE, CharacterDto.class);
         } catch (JsonProcessingException e) {
@@ -68,6 +83,9 @@ public class MarvelRestServiceTest {
         // given
         List<CharacterDto> listResponse = new ArrayList<>();
         listResponse.add(character);
+        register.setApi("/characters");
+        register.setId(123L);
+        given(registerLogService.saveRegister(any(RegisterLog.class))).willReturn(register);
         given(securityService.createCharacterRequest(null)).willReturn(request);
         given(characterConsumerService.getCharacters(request)).willReturn(listResponse);
         // when
@@ -82,6 +100,9 @@ public class MarvelRestServiceTest {
     public void givenId_whenGetCharacters_thenReturnCharacter() {
         // given
         request.setCharacterId(1234L);
+        register.setApi("/characters/{id}");
+        register.setId(1234L);
+        given(registerLogService.saveRegister(any(RegisterLog.class))).willReturn(register);
         given(securityService.createCharacterRequest(1234L)).willReturn(request);
         given(characterConsumerService.getCharacterById(request)).willReturn(Optional.of(character));
         // when

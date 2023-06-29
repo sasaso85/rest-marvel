@@ -2,6 +2,7 @@ package com.challenge.marvel.rest.service;
 
 import com.challenge.marvel.library.dto.CharacterDto;
 import com.challenge.marvel.library.service.CharacterConsumerService;
+import com.challenge.marvel.rest.util.RegisterLogUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,19 +12,25 @@ import java.util.Optional;
 public class MarvelRestServiceImpl implements MarvelRestService {
     private final CharacterConsumerService characterConsumerService;
     private final SecurityService securityService;
+    private final RegisterLogService registerLogService;
 
-    public MarvelRestServiceImpl(CharacterConsumerService characterConsumerService, SecurityService securityService) {
+    public MarvelRestServiceImpl(CharacterConsumerService characterConsumerService, SecurityService securityService, RegisterLogService registerLogService) {
         this.characterConsumerService = characterConsumerService;
         this.securityService = securityService;
+        this.registerLogService = registerLogService;
     }
 
     @Override
     public List<CharacterDto> getCharacters() {
-        return characterConsumerService.getCharacters(securityService.createCharacterRequest(null));
+        List<CharacterDto> characterDtoList = characterConsumerService.getCharacters(securityService.createCharacterRequest(null));
+        registerLogService.saveRegister(RegisterLogUtil.createRegister(200, "/characters"));
+        return characterDtoList;
     }
 
     @Override
     public Optional<CharacterDto> getCharacterById(Long characterId) {
-        return characterConsumerService.getCharacterById(securityService.createCharacterRequest(characterId));
+        Optional<CharacterDto> characterById = characterConsumerService.getCharacterById(securityService.createCharacterRequest(characterId));
+        registerLogService.saveRegister(RegisterLogUtil.createRegister(200, "/characters/" + characterId));
+        return characterById;
     }
 }
