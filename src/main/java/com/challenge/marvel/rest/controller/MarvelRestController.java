@@ -6,20 +6,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${origin.path}")
 @RestController
-@RequestMapping("/api/v1/marvel")
+@RequestMapping("${characters.base.path}")
 @RequiredArgsConstructor
 public class MarvelRestController {
 
     private final MarvelRestService marvelRestService;
 
-    @GetMapping("/characters")
+    @GetMapping()
     public ResponseEntity<?> getCharacters() {
         return new ResponseEntity<>(marvelRestService.getCharacters(), HttpStatus.OK);
 
     }
-    @GetMapping("/characters/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getCharacterById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(marvelRestService.getCharacterById(id), HttpStatus.OK);
 

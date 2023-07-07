@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${origin.path}")
 @RestController
-@RequestMapping("/api/v1/log")
+@RequestMapping("${log.base.path}")
 @RequiredArgsConstructor
 public class RegisterLogController {
 
     private final RegisterLogService registerLogService;
 
-    @GetMapping("/registers")
+    @GetMapping()
     public ResponseEntity<?> getRegisters() {
         return new ResponseEntity<>(registerLogService.getAll(), HttpStatus.OK);
 
